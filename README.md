@@ -3,7 +3,7 @@
 ## checklist
 
 - [x] create a player
-- [ ] shoot projectiles
+- [x] shoot projectiles
 - [ ] create enemies
 - [ ] detect collision on enemy / projectile hit
 - [ ] detect collision on enemy / player hit
