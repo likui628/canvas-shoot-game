@@ -126,6 +126,4 @@ addEventListener("click", ({ clientX, clientY }) => {
       y: Math.sin(angle),
     })
   );
-
-  animation();
 });
