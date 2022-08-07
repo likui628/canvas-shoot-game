@@ -115,8 +115,19 @@ function projectileHit(enemy, enemyIndex) {
   });
 }
 
+let animationFrameHandler;
+
+function playerHit() {
+  enemies.forEach((enemy) => {
+    const dist = Math.hypot(center.x - enemy.x, center.y - enemy.y);
+    if (dist < enemy.radius + player.radius + 1) {
+      cancelAnimationFrame(animationFrameHandler);
+    }
+  });
+}
+
 function animation() {
-  requestAnimationFrame(animation);
+  animationFrameHandler = requestAnimationFrame(animation);
   c.clearRect(0, 0, canvas.width, canvas.height);
 
   projectiles.forEach((projectile) => projectile.update());
@@ -125,6 +136,7 @@ function animation() {
   enemies.forEach((enemy, index) => {
     enemy.update();
     projectileHit(enemy, index);
+    playerHit();
   });
 }
 
