@@ -74,6 +74,7 @@ const center = {
 const player = new Player(center.x, center.y, 30, "blue");
 const projectiles = [];
 const enemies = [];
+let animationFrameHandler;
 
 function spawnEnemies() {
   setInterval(() => {
@@ -100,8 +101,6 @@ function spawnEnemies() {
   }, 1000);
 }
 
-spawnEnemies();
-
 function projectileHit(enemy, enemyIndex) {
   projectiles.forEach((projectile, projectileIndex) => {
     const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
@@ -115,8 +114,6 @@ function projectileHit(enemy, enemyIndex) {
   });
 }
 
-let animationFrameHandler;
-
 function playerHit() {
   enemies.forEach((enemy) => {
     const dist = Math.hypot(center.x - enemy.x, center.y - enemy.y);
@@ -126,11 +123,28 @@ function playerHit() {
   });
 }
 
+function projectileOffScreen(projectile, projectileIndex) {
+  const { x, y, radius } = projectile;
+  if (
+    x - radius < 0 ||
+    x + radius > canvas.width ||
+    y - radius < 0 ||
+    y + radius > canvas.height
+  ) {
+    setTimeout(() => {
+      projectiles.splice(projectileIndex, 1);
+    }, 0);
+  }
+}
+
 function animation() {
   animationFrameHandler = requestAnimationFrame(animation);
   c.clearRect(0, 0, canvas.width, canvas.height);
 
-  projectiles.forEach((projectile) => projectile.update());
+  projectiles.forEach((projectile, index) => {
+    projectile.update();
+    projectileOffScreen(projectile, index);
+  });
   player.draw();
 
   enemies.forEach((enemy, index) => {
@@ -140,18 +154,26 @@ function animation() {
   });
 }
 
-animation();
+function eventHandler() {
+  addEventListener("click", ({ clientX, clientY }) => {
+    const angle = Math.atan2(
+      clientY - canvas.height / 2,
+      clientX - canvas.width / 2
+    );
 
-addEventListener("click", ({ clientX, clientY }) => {
-  const angle = Math.atan2(
-    clientY - canvas.height / 2,
-    clientX - canvas.width / 2
-  );
+    projectiles.push(
+      new Projectile(center.x, center.y, 5, "red", {
+        x: Math.cos(angle),
+        y: Math.sin(angle),
+      })
+    );
+  });
+}
 
-  projectiles.push(
-    new Projectile(center.x, center.y, 5, "red", {
-      x: Math.cos(angle),
-      y: Math.sin(angle),
-    })
-  );
-});
+function start() {
+  spawnEnemies();
+  animation();
+  eventHandler();
+}
+
+start();
