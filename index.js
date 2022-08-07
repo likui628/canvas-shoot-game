@@ -102,6 +102,19 @@ function spawnEnemies() {
 
 spawnEnemies();
 
+function projectileHit(enemy, enemyIndex) {
+  projectiles.forEach((projectile, projectileIndex) => {
+    const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
+
+    if (dist < enemy.radius + projectile.radius + 1) {
+      setTimeout(() => {
+        enemies.splice(enemyIndex, 1);
+        projectiles.splice(projectileIndex, 1);
+      }, 0);
+    }
+  });
+}
+
 function animation() {
   requestAnimationFrame(animation);
   c.clearRect(0, 0, canvas.width, canvas.height);
@@ -109,7 +122,10 @@ function animation() {
   projectiles.forEach((projectile) => projectile.update());
   player.draw();
 
-  enemies.forEach((enemy) => enemy.update());
+  enemies.forEach((enemy, index) => {
+    enemy.update();
+    projectileHit(enemy, index);
+  });
 }
 
 animation();
