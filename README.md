@@ -8,7 +8,7 @@
 - [x] detect collision on enemy / projectile hit
 - [x] detect collision on enemy / player hit
 - [x] remove off screen projecties
-- [ ] colorize game
+- [x] colorize game
 - [ ] shrink enmies on hit
 - [ ] create particle explosion on hit
 - [ ] add score

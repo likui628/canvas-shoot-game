@@ -71,7 +71,7 @@ const center = {
   y: canvas.height / 2,
 };
 
-const player = new Player(center.x, center.y, 30, "blue");
+const player = new Player(center.x, center.y, 10, "white");
 const projectiles = [];
 const enemies = [];
 let animationFrameHandler;
@@ -89,7 +89,7 @@ function spawnEnemies() {
       y = Math.random() < 0.5 ? canvas.height + radius : 0 - radius;
     }
 
-    const color = "green";
+    const color = `hsl(${Math.random() * 360}, 50%, 50%)`;
 
     const angle = Math.atan2(center.y - y, center.x - x);
     const velocity = {
@@ -139,7 +139,9 @@ function projectileOffScreen(projectile, projectileIndex) {
 
 function animation() {
   animationFrameHandler = requestAnimationFrame(animation);
-  c.clearRect(0, 0, canvas.width, canvas.height);
+
+  c.fillStyle = "rgba(0, 0, 0, 0.1)";
+  c.fillRect(0, 0, canvas.width, canvas.height);
 
   projectiles.forEach((projectile, index) => {
     projectile.update();
@@ -162,9 +164,9 @@ function eventHandler() {
     );
 
     projectiles.push(
-      new Projectile(center.x, center.y, 5, "red", {
-        x: Math.cos(angle),
-        y: Math.sin(angle),
+      new Projectile(center.x, center.y, 5, "white", {
+        x: Math.cos(angle) * 6,
+        y: Math.sin(angle) * 6,
       })
     );
   });
