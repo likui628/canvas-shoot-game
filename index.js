@@ -2,6 +2,8 @@ const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
 
 const scoreEl = document.getElementById("scoreEl");
+const modalEl = document.getElementById("modalEl");
+const finalScoreEl = document.getElementById("finalScoreEl");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -186,8 +188,7 @@ function playerHit() {
   enemies.forEach((enemy) => {
     const dist = Math.hypot(center.x - enemy.x, center.y - enemy.y);
     if (dist < enemy.radius + player.radius + 1) {
-      cancelAnimationFrame(animationFrameHandler);
-      clearInterval(intervalID);
+      gameOver();
     }
   });
 }
@@ -257,4 +258,9 @@ function start() {
   eventHandler();
 }
 
-start();
+function gameOver() {
+  cancelAnimationFrame(animationFrameHandler);
+  clearInterval(intervalID);
+  modalEl.classList.replace("hidden", "flex");
+  finalScoreEl.innerHTML = score;
+}

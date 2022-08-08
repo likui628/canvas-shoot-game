@@ -11,6 +11,20 @@
     <div class="fixed text-white pl-2 pt-1">
       Score: <span id="scoreEl">0</span>
     </div>
+    <div id="modalEl" class="flex fixed inset-0 items-center justify-center">
+      <div
+        class="bg-white rounded-md flex flex-col justify-center items-center p-5"
+      >
+        <h1 id="finalScoreEl" class="text-3xl p-2">0</h1>
+        <span class="text-sm p-1">Points</span>
+        <button
+          id="startBtn"
+          class="bg-blue-300 py-2 px-10 rounded-full text-white"
+        >
+          Start Game
+        </button>
+      </div>
+    </div>
     <canvas id="canvas"></canvas>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"
