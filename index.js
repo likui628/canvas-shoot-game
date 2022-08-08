@@ -109,9 +109,10 @@ const enemies = [];
 const particles = [];
 
 let animationFrameHandler;
+let intervalID;
 
 function spawnEnemies() {
-  setInterval(() => {
+  intervalID = setInterval(() => {
     const radius = Math.random() * (30 - 4) + 4;
 
     let x, y;
@@ -174,6 +175,7 @@ function playerHit() {
     const dist = Math.hypot(center.x - enemy.x, center.y - enemy.y);
     if (dist < enemy.radius + player.radius + 1) {
       cancelAnimationFrame(animationFrameHandler);
+      clearInterval(intervalID);
     }
   });
 }
