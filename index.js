@@ -1,4 +1,3 @@
-console.log(gsap);
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
 
@@ -67,6 +66,38 @@ class Enemy {
   }
 }
 
+const friction = 0.98;
+
+class Particle {
+  constructor(x, y, radius, color, velocity) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.velocity = velocity;
+    this.alpha = 0.5;
+  }
+
+  draw() {
+    c.save();
+    c.globalAlpha = this.alpha;
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.fillStyle = this.color;
+    c.fill();
+    c.restore();
+  }
+
+  update() {
+    this.draw();
+    this.velocity.x *= friction;
+    this.velocity.y *= friction;
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    this.alpha -= 0.01;
+  }
+}
+
 const center = {
   x: canvas.width / 2,
   y: canvas.height / 2,
@@ -75,6 +106,8 @@ const center = {
 const player = new Player(center.x, center.y, 10, "white");
 const projectiles = [];
 const enemies = [];
+const particles = [];
+
 let animationFrameHandler;
 
 function spawnEnemies() {
@@ -102,11 +135,24 @@ function spawnEnemies() {
   }, 1000);
 }
 
+function generateParticle(projectile, enemy) {
+  for (let i = 0; i < enemy.radius * 2; ++i) {
+    particles.push(
+      new Particle(projectile.x, projectile.y, Math.random() * 3, enemy.color, {
+        x: (Math.random() - 0.5) * (Math.random() * 8),
+        y: (Math.random() - 0.5) * (Math.random() * 8),
+      })
+    );
+  }
+}
+
 function projectileHit(enemy, enemyIndex) {
   projectiles.forEach((projectile, projectileIndex) => {
     const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
 
     if (dist < enemy.radius + projectile.radius + 1) {
+      generateParticle(projectile, enemy);
+
       if (enemy.radius > 20) {
         gsap.to(enemy, {
           radius: enemy.radius - 10,
@@ -157,6 +203,16 @@ function animation() {
     projectileOffScreen(projectile, index);
   });
   player.draw();
+
+  particles.forEach((particle, particleIndex) => {
+    if (particle.alpha <= 0) {
+      setTimeout(() => {
+        particles.splice(particleIndex, 1);
+      }, 0);
+    } else {
+      particle.update();
+    }
+  });
 
   enemies.forEach((enemy, index) => {
     enemy.update();
