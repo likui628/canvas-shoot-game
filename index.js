@@ -1,6 +1,8 @@
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
 
+const scoreEl = document.getElementById("scoreEl");
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -107,6 +109,7 @@ const player = new Player(center.x, center.y, 10, "white");
 const projectiles = [];
 const enemies = [];
 const particles = [];
+let score = 0;
 
 let animationFrameHandler;
 let intervalID;
@@ -147,6 +150,11 @@ function generateParticle(projectile, enemy) {
   }
 }
 
+function accumScore(num) {
+  score += num;
+  scoreEl.innerHTML = score;
+}
+
 function projectileHit(enemy, enemyIndex) {
   projectiles.forEach((projectile, projectileIndex) => {
     const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
@@ -155,11 +163,15 @@ function projectileHit(enemy, enemyIndex) {
       generateParticle(projectile, enemy);
 
       if (enemy.radius > 20) {
+        accumScore(10);
+
         gsap.to(enemy, {
           radius: enemy.radius - 10,
         });
       } else {
         setTimeout(() => {
+          accumScore(100);
+
           enemies.splice(enemyIndex, 1);
         }, 0);
       }

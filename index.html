@@ -5,8 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Canvas Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body>
+    <div class="fixed text-white pl-2 pt-1">
+      Score: <span id="scoreEl">0</span>
+    </div>
     <canvas id="canvas"></canvas>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"
