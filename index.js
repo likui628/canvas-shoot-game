@@ -1,12 +1,16 @@
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
 
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+c.fillStyle = "black";
+c.fillRect(0, 0, canvas.width, canvas.height);
+
 const scoreEl = document.getElementById("scoreEl");
 const modalEl = document.getElementById("modalEl");
 const finalScoreEl = document.getElementById("finalScoreEl");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const startBtn = document.getElementById("startBtn");
 
 class Player {
   constructor(x, y, radius, color) {
@@ -236,26 +240,18 @@ function animation() {
   });
 }
 
-function eventHandler() {
-  addEventListener("click", ({ clientX, clientY }) => {
-    const angle = Math.atan2(
-      clientY - canvas.height / 2,
-      clientX - canvas.width / 2
-    );
+function startGame() {
+  modalEl.classList.replace("flex", "hidden");
 
-    projectiles.push(
-      new Projectile(center.x, center.y, 5, "white", {
-        x: Math.cos(angle) * 6,
-        y: Math.sin(angle) * 6,
-      })
-    );
-  });
-}
+  enemies.splice(0, enemies.length);
+  particles.splice(0, particles.length);
+  projectiles.splice(0, projectiles.length);
 
-function start() {
+  score = 0;
+  scoreEl.innerHTML = 0;
+
   spawnEnemies();
   animation();
-  eventHandler();
 }
 
 function gameOver() {
@@ -264,3 +260,22 @@ function gameOver() {
   modalEl.classList.replace("hidden", "flex");
   finalScoreEl.innerHTML = score;
 }
+
+startBtn.addEventListener("click", (event) => {
+  event.stopPropagation();
+  startGame();
+});
+
+addEventListener("click", ({ clientX, clientY }) => {
+  const angle = Math.atan2(
+    clientY - canvas.height / 2,
+    clientX - canvas.width / 2
+  );
+
+  projectiles.push(
+    new Projectile(center.x, center.y, 5, "white", {
+      x: Math.cos(angle) * 6,
+      y: Math.sin(angle) * 6,
+    })
+  );
+});
